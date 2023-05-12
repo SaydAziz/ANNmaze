@@ -31,15 +31,16 @@ namespace AnnMaze
             bool playing = true;
             Console.WriteLine("Welcome to the Death Maze!!!");
             Console.WriteLine("You have access to the Arsenal, where you can pick out your gear which you will use to defeat the monsters.");
-            PopulateArsenal();
+            PopulateArsenal(); //Make items to equip into loadout
 
             while (playing)
             {
-                Reset();
+                Reset(); //Reset all game loop values
 
                 Console.Write("Press any key to enter the Arsenal...  ");
                 Console.ReadKey(true);          
 
+                //Equip items into inventory (effects Neural Network results)
                 for (int i = 0; i < 6; i++)
                 {
                     BuyCycle();
@@ -47,6 +48,7 @@ namespace AnnMaze
 
                 Console.Clear();
                 player.PrintInv();
+                //Input inventory into Neural Network to get power level
                 CalculatePower(player);
                 Console.WriteLine("-------------- LEVEL " + player.powerLVL + " --------------");
 
@@ -75,15 +77,14 @@ namespace AnnMaze
 
         void PlayMaze()
         {
-            SpawnEnemy();
+            SpawnEnemy(); //Creates enemy inventory equivalent
             Console.WriteLine("You have entered the maze, but as you go through it you encounter something weird...");
-            //Console.ReadKey(true);
 
             bool winning = true;
 
             while(winning)
             {
-                winning = Fight();
+                winning = Fight(); //Compares power level to decided who wins
                 SpawnEnemy();
             }
 
@@ -112,8 +113,6 @@ namespace AnnMaze
 
         bool Fight()
         {
-
-
             Console.WriteLine("\nIT'S AN ENEMY! (Press any key to fight...)\n");
             Console.ReadKey(true);
 
@@ -135,13 +134,11 @@ namespace AnnMaze
                 Console.ReadKey(true);
                 return false;
             }
-
-
         }
+
         void CalculatePower(Entity ent)
         {
             var output = neuralNetwork.Think(ent.getInv());
-            //Console.WriteLine(output[0, 0]);
             ent.powerLVL = int.Parse((output[0, 0] * 1000000).ToString().Substring(0, 2));
         }
 
